@@ -35,4 +35,7 @@ class Lox:
             else: 
                 Lox.run(line)
                 Lox.hadError = False
+    @staticmethod
+    def error(line,message):
+        print(message)
                 

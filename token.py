@@ -5,11 +5,11 @@ class Token:
     
     def __init__(self,lexeme,literal,line) -> None:
         
-        type = TokenType()
+        self.tipo = TokenType()
         self.lexeme = lexeme
         self.literal = literal
         self.line = line
     
     def __str__(self) -> str:
-        return f"{type} {self.lexeme} {self.literal}"
+        return f"{self.tipo} {self.lexeme} {self.literal}"
     
