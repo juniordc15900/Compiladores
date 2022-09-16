@@ -1,10 +1,11 @@
 from token import Token
-from lox import Lox
+
+
 class Scanner():
 
     def __init__(self,source):
         self.source = source
-        self.tokens = [Token()]
+        self.tokens = []
         self.current = 0
     
     def isAtEnd(self):
@@ -17,9 +18,9 @@ class Scanner():
     def addTokens(self,tipo,lexeme,literal,line):
         self.addToken(tipo)
     
-    def addToken(self,tipo):
+    def addToken(self,tipo,start=0):
         text = self.source[start:self.current]
-        self.tokens.append(Token(tipo,text,literal,line))
+        self.tokens.append(Token(tipo,text,literal,line=0))
 
     def match(self,expected):
         if self.isAtEnd():
@@ -58,7 +59,8 @@ class Scanner():
         elif c == "!":
             self.addToken("BANG_EQUAL" if self.match("=") else "BANG")
         else:
-            Lox.error(line,"Unspected character")
+            line=0
+            Scanner.error(line,"Unspected character")
     
     def scanTokens(self,start=0,line=1):
         while not self.isAtEnd():

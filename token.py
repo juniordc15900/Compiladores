@@ -1,11 +1,10 @@
-from lox import Lox
 from TokenType import TokenType
 
 class Token:
     
-    def __init__(self,lexeme,literal,line) -> None:
+    def __init__(self,tipo,lexeme,literal,line) -> None:
         
-        self.tipo = TokenType()
+        self.tipo = TokenType(tipo)
         self.lexeme = lexeme
         self.literal = literal
         self.line = line
