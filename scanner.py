@@ -48,7 +48,7 @@ class Scanner():
             Scanner.error(line, "Unterminated String")
             return
 
-    def isDigit(c):
+    def isDigit(self,c):
         return c >= '0' and c <= '9'
 
     def number(self):
