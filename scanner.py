@@ -1,6 +1,5 @@
-from token import Token
-
-from TokenType import TokenType
+from tokenn import Tokenn
+from tokentype import TokenType
 
 
 class Scanner():
@@ -9,6 +8,7 @@ class Scanner():
         self.source = source
         self.tokens = []
         self.current = 0
+        self.start = 0
     
     def isAtEnd(self):
         return self.current >= len(self.source)
@@ -20,14 +20,14 @@ class Scanner():
     def addTokens(self,tipo,lexeme,literal,line):
         self.addToken(tipo)
     
-    def addToken(self,tipo,start=0):
-        text = self.source[start:self.current]
-        self.tokens.append(Token(tipo,text,literal=0,line=0))
+    def addToken(self,tipo,literal=None):
+        text = self.source[self.start:self.current]
+        self.tokens.append(Tokenn(tipo,text,literal,line=1))
 
     def match(self,expected):
         if self.isAtEnd():
             return False
-        elif self.source(self.current) != expected:
+        elif self.source[self.current] != expected:
             return False
         else:
             self.current+=1
@@ -59,7 +59,7 @@ class Scanner():
             while self.isDigit(self.peek()):
                 self.advance()
 
-        self.addToken(NUMBER, float(source.substring(start, current)))
+        self.addToken(NUMBER, float(source.substring(self.start, self.current)))
     def peekNext(self):
         if self.current +1 >= len(self.source):
             return '/0' #final de string
@@ -113,10 +113,10 @@ class Scanner():
             Scanner.error(line, "Unespected character")
 
     
-    def scanTokens(self,start=0,line=0):
+    def scanTokens(self,line=1):
         while not self.isAtEnd():
-            start = self.current
+            self.start = self.current
             self.scanToken()
-        self.tokens.append(Token(TokenType.EOF,"",None,line))    
+        self.tokens.append(Tokenn(TokenType.EOF,"",None,line))    
         return self.tokens
         #return list of tokens

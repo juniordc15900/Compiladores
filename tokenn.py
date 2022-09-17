@@ -1,6 +1,6 @@
-from TokenType import TokenType
+from tokentype import TokenType
 
-class Token:
+class Tokenn:
     
     def __init__(self,tipo,lexeme,literal,line) -> None:
         
