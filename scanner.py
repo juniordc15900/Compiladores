@@ -28,6 +28,9 @@ class Scanner():
             "WHILE": TokenType.WHILE
         }
     
+    def error(self,line,message):
+        print(message)
+    
     def isAtEnd(self):
         return self.current >= len(self.source)
 
@@ -67,7 +70,7 @@ class Scanner():
             else:
                 self.advance()
         if self.isAtEnd():
-            Lox.error(self.line, "Unterminated String")
+            self.error(self.line, "Unterminated String")
             return
 
     def isDigit(self,c):
@@ -83,10 +86,13 @@ class Scanner():
         while self.isAlphaNumeric(self.peek()):
             self.advance()
         text = self.source[self.start:self.current]
-        tipo = self.keywords[text.upper()]
-        if tipo == None:
-            tipo = TokenType.IDENTIFIER
-        self.addToken(tipo)
+        try:
+            tipo = self.keywords[text.upper()]
+            if tipo == None:
+                tipo = TokenType.IDENTIFIER
+            self.addToken(tipo)
+        except:
+            self.error(self.line,"Unespected string")
 
     def number(self):
         while self.isDigit(self.peek()):
@@ -159,7 +165,7 @@ class Scanner():
                 self.identifier()
             else: 
                 self.line=0
-                Lox.error(self.line, "Unespected character")
+                self.error(self.line, "Unespected character")
 
     
     def scanTokens(self,line=1):
