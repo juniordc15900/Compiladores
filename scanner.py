@@ -1,7 +1,6 @@
 from tokenn import Tokenn
 from TokenType import TokenType
 
-
 class Scanner():
 
     def __init__(self,source):
@@ -68,7 +67,7 @@ class Scanner():
             else:
                 self.advance()
         if self.isAtEnd():
-            Scanner.error(self.line, "Unterminated String")
+            Lox.error(self.line, "Unterminated String")
             return
 
     def isDigit(self,c):
@@ -97,8 +96,14 @@ class Scanner():
             while self.isDigit(self.peek()):
                 self.advance()
 
-        self.addToken(TokenType.NUMBER, float(self.source[self.start, self.current]))
+        self.addToken(TokenType.NUMBER)
     
+    def isComment(self):
+        while (self.peek() != '*' and not self.isAtEnd()):
+            self.advance()
+        self.advance()
+        if self.match('/'):
+            return True
 
     def scanToken(self):
         c = self.advance()
@@ -135,6 +140,10 @@ class Scanner():
             if self.match('/'):
                 while (self.peek() != '/n' and not self.isAtEnd()):
                     self.advance()
+            elif self.match('*'):
+                if self.isComment():
+                    self.addToken(TokenType.COMMENT)
+
             else:
                 self.addToken(TokenType.SLASH)
         elif c == "/n":
@@ -150,7 +159,7 @@ class Scanner():
                 self.identifier()
             else: 
                 self.line=0
-                Scanner.error(line, "Unespected character")
+                Lox.error(self.line, "Unespected character")
 
     
     def scanTokens(self,line=1):

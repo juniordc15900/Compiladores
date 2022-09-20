@@ -48,5 +48,8 @@ class TokenType(Enum):
     VAR = auto()
     WHILE = auto()
 
+    #comment
+    COMMENT = auto()
+
     # precisamos do EOF ("end of file")
     EOF = auto()
