@@ -9,6 +9,7 @@ class Scanner():
         self.tokens = []
         self.current = 0
         self.start = 0
+        self.line = 1
         self.keywords = {
             "AND": TokenType.AND,
             "CLASS": TokenType.CLASS,
@@ -52,13 +53,13 @@ class Scanner():
             return True
 
     def peek(self):
-        if(self.isAtEnd):
-            return '\x00'             #final de string em python
+        if(self.isAtEnd()):
+            return '/0'             #final de string em python
         return self.source[self.current]
 
     def peekNext(self):
         if self.current +1 >= len(self.source):
-            return '\x00' #final de string
+            return '/0' #final de string
     
     def string(self):
         while(self.peek() != '"' and not self.isAtEnd):
@@ -74,7 +75,7 @@ class Scanner():
         return c >= '0' and c <= '9'
     
     def isAlpha(self,c):
-        return (c == 'a' and c == 'z') or (c == 'A' and c == 'Z') or c == '_' 
+        return (c >= 'a' and c <= 'z') or (c >= 'A' and c <= 'Z') or c == '_' 
     
     def isAlphaNumeric(self,c):
         return self.isAlpha(c) or self.isDigit(c)
@@ -83,7 +84,7 @@ class Scanner():
         while self.isAlphaNumeric(self.peek()):
             self.advance()
         text = self.source[self.start:self.current]
-        tipo = self.keywords[text].upper()
+        tipo = self.keywords[text.upper()]
         if tipo == None:
             tipo = TokenType.IDENTIFIER
         self.addToken(tipo)
@@ -147,7 +148,7 @@ class Scanner():
                 self.identifier()
             else: 
                 line=0
-            Scanner.error(line, "Unespected character")
+                Scanner.error(line, "Unespected character")
 
     
     def scanTokens(self,line=1):
