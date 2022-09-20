@@ -62,13 +62,13 @@ class Scanner():
             return '/0' #final de string
     
     def string(self):
-        while(self.peek() != '"' and not self.isAtEnd):
+        while(self.peek() != '"' and not self.isAtEnd()):
             if (self.peek() == '\n'):
-                line +=1
+                self.line +=1
             else:
                 self.advance()
         if self.isAtEnd():
-            Scanner.error(line, "Unterminated String")
+            Scanner.error(self.line, "Unterminated String")
             return
 
     def isDigit(self,c):
@@ -138,16 +138,18 @@ class Scanner():
             else:
                 self.addToken(TokenType.SLASH)
         elif c == "/n":
-            line+=1
+            self.line+=1
         elif c == '"':
             self.string()
+        elif c == ' ':
+            pass
         else:
             if self.isDigit(c):
                 self.number()
             elif self.isAlpha(c):
                 self.identifier()
             else: 
-                line=0
+                self.line=0
                 Scanner.error(line, "Unespected character")
 
     
