@@ -1,5 +1,5 @@
 from tokenn import Tokenn
-from tokentype import TokenType
+from TokenType import TokenType
 
 
 class Scanner():
@@ -9,6 +9,24 @@ class Scanner():
         self.tokens = []
         self.current = 0
         self.start = 0
+        self.keywords = {
+            "AND": TokenType.AND,
+            "CLASS": TokenType.CLASS,
+            "ELSE": TokenType.ELSE,
+            "FALSE": TokenType.FALSE,
+            "FUN": TokenType.FUN,
+            "FOR": TokenType.FOR,
+            "IF": TokenType.IF,
+            "NIL": TokenType.NIL,
+            "OR": TokenType.OR,
+            "PRINT": TokenType.PRINT,
+            "RETURN": TokenType.RETURN,
+            "SUPER": TokenType.SUPER,
+            "THIS": TokenType.THIS,
+            "TRUE": TokenType.TRUE,
+            "VAR": TokenType.VAR,
+            "WHILE": TokenType.WHILE
+        }
     
     def isAtEnd(self):
         return self.current >= len(self.source)
@@ -35,8 +53,12 @@ class Scanner():
 
     def peek(self):
         if(self.isAtEnd):
-            return '\0'             #final de string em python
-        return self.source(self.current)
+            return '\x00'             #final de string em python
+        return self.source[self.current]
+
+    def peekNext(self):
+        if self.current +1 >= len(self.source):
+            return '\x00' #final de string
     
     def string(self):
         while(self.peek() != '"' and not self.isAtEnd):
@@ -50,6 +72,21 @@ class Scanner():
 
     def isDigit(self,c):
         return c >= '0' and c <= '9'
+    
+    def isAlpha(self,c):
+        return (c == 'a' and c == 'z') or (c == 'A' and c == 'Z') or c == '_' 
+    
+    def isAlphaNumeric(self,c):
+        return self.isAlpha(c) or self.isDigit(c)
+    
+    def identifier(self):
+        while self.isAlphaNumeric(self.peek()):
+            self.advance()
+        text = self.source[self.start:self.current]
+        tipo = self.keywords[text].upper()
+        if tipo == None:
+            tipo = TokenType.IDENTIFIER
+        self.addToken(tipo)
 
     def number(self):
         while self.isDigit(self.peek()):
@@ -59,10 +96,8 @@ class Scanner():
             while self.isDigit(self.peek()):
                 self.advance()
 
-        self.addToken(NUMBER, float(source.substring(self.start, self.current)))
-    def peekNext(self):
-        if self.current +1 >= len(self.source):
-            return '/0' #final de string
+        self.addToken(TokenType.NUMBER, float(self.source[self.start, self.current]))
+    
 
     def scanToken(self):
         c = self.advance()
@@ -108,6 +143,8 @@ class Scanner():
         else:
             if self.isDigit(c):
                 self.number()
+            elif self.isAlpha(c):
+                self.identifier()
             else: 
                 line=0
             Scanner.error(line, "Unespected character")
