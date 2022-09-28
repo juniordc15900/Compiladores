@@ -10,37 +10,43 @@ class GenerateAst():
             print('Usage....')
             exit()
         self.outputDir = args[0]
-        self.__defineAst(self.outputDir,"Expr",["Binary : Expr left, Token operator, Expr right",
-                                          "Grouping:Expr expression",
-                                           "Unary:Token operator, Expr right",
-                                           "Literal:Object value"])
+        self.defineAst(self.outputDir,"Expr",{"Binary" :"left: Expr ,operator: Token ,right: Expr",
+                                          "Grouping":"expression: Expr",
+                                           "Unary":"operator: Token,right: Expr",
+                                           "Literal":"value: Object"})
 
 
    
 
-    @staticmethod
-    def defineAst(outputDir,baseName,types):
-        print(outputDir)
+    def defineAst(self,outputDir,baseName,types):
         path = f'{outputDir}/{baseName}.py'
         arq = open(f'{baseName}.py','w')
         arq.write(f'class {baseName}():')
+        arq.write('\n')
+        
 
         for type in types:
-            className = type.split(':')[0].strip()
-            fields = type.split(':')[1].strip()
+            className = type
+            fields = str(types[type]).split(',')
             self.defineType(arq,baseName,className,fields)
         arq.close()
 
-    @staticmethod
     def defineType(self,arq,baseName,className,fields):
-        arq.write(f" class {className}({baseName}):")
+        
+        arq.write('\n')
+        arq.write(f"    class {className}({baseName}):")
+        arq.write('\n')
         #construtor
-        arq.write("     def __init__(): ")
-        arq.write(f"        super(). ")
-        fields = fields.split(',')
+    
+        arq.write(f"        def __init__(self,{','.join(fields)}):")
+        arq.write('\n')
+        arq.write(f"            super().__init__()")
+        arq.write('\n')
         for field in fields:
-            name = field.splt(' ')[1]
-            arq.write(f"        self.{name} = {name}")
+            name = field[:field.find(':')]
+            arq.write(f"            self.{name} = {name}")
+            arq.write('\n')
+            
     
     
 
