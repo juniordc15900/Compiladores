@@ -1,3 +1,4 @@
+#https://refactoring.guru/pt-br/design-patterns/visitor/python/example
 from sys import argv
 
 class GenerateAst():
@@ -24,12 +25,28 @@ class GenerateAst():
         arq.write(f'class {baseName}():')
         arq.write('\n')
         
+        self.defineVisitor(arq,baseName,types) #visitor
 
         for type in types:
             className = type
             fields = str(types[type]).split(',')
             self.defineType(arq,baseName,className,fields)
+        
         arq.close()
+
+    def defineVisitor(self,arq,baseName,types):
+        arq.write(f"    class Visitor(ABC):") #!!!
+        arq.write('\n')
+        arq.write('@abstractmethod')
+        arq.write('\ndef visit_concrete_component')
+        
+        for type in types:
+            typeName = types[type]
+            
+            arq.write('\n')
+            arq.write(f"    class Visitor(ABC):") #!!! VISITOR EM PYTHON !!!
+            arq.write('\n')
+            arq.write()
 
     def defineType(self,arq,baseName,className,fields):
         
