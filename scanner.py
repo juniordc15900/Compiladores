@@ -62,6 +62,8 @@ class Scanner():
     def peekNext(self):
         if self.current +1 >= len(self.source):
             return '/0' #final de string
+        else:
+            return self.source[self.current+1]
     
     def string(self):
         while(self.peek() != '"' and not self.isAtEnd()):
