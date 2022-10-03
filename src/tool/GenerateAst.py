@@ -1,6 +1,10 @@
 #https://refactoring.guru/pt-br/design-patterns/visitor/python/example
 from sys import argv
-import os
+from pathlib import Path
+from argparse import ArgumentParser
+
+
+IDENTATION = '    '
 
 class GenerateAst():
 
@@ -15,39 +19,43 @@ class GenerateAst():
         self.defineAst(self.outputDir,"Expr",{"Binary" :"left: Expr ,operator: Token ,right: Expr",
                                           "Grouping":"expression: Expr",
                                            "Unary":"operator: Token,right: Expr",
-                                           "Literal":"value: Object"})
+                                           "Literal":"value: Any"})
 
 
    
 
-    def defineAst(self,outputDir,baseName,types):
-        path = f'{outputDir}/{baseName}.py'
-        arq = open(f'{baseName}','w')
-        arq.write(f'class {baseName}():')
-        arq.write('\n')
-        
-        self.defineVisitor(arq,baseName,types) #visitor
+    def defineAst(self,path:Path,baseName,types):
+        with open(f'{baseName}.py',mode='w', encoding='utf-8') as arq:
+            arq.write(f'class {baseName}():')
+            arq.write('\n')
+            
+            self.defineVisitor(arq,baseName,types) #visitor
 
-        for type in types:
-            className = type
-            fields = str(types[type]).split(',')
-            self.defineType(arq,baseName,className,fields)
+            for type in types:
+                className = type
+                fields = str(types[type]).split(',')
+                self.defineType(arq,baseName,className,fields)
         
-        arq.close()
 
     def defineVisitor(self,arq,baseName,types):
-        arq.write(f"    class Visitor(ABC):") #!!!
+        name = baseName.lower()
+        visitor = f'{name}Visitor'
+        
+        arq.write('\n\n\n')
+        arq.write(f"class {visitor}(ABC):") #!!!
         arq.write('\n')
-        arq.write('@abstractmethod')
-        arq.write('\ndef visit_concrete_component')
+        
         
         for type in types:
-            typeName = types[type]
             
             arq.write('\n')
-            arq.write(f"    class Visitor(ABC):") #!!! VISITOR EM PYTHON !!!
+            arq.write(f'{IDENTATION}@abstractmethod')
             arq.write('\n')
-            arq.write()
+            arq.write(f'{IDENTATION}')
+            arq.write(f'def visit_{type.lower()}_{name}(self,expr: {baseName}):')
+            arq.write('\n')
+            arq.write(f'{IDENTATION*2}pass')
+            arq.write('\n')
 
     def defineType(self,arq,baseName,className,fields):
         
@@ -72,4 +80,4 @@ class GenerateAst():
 
 if __name__ == '__main__':
     generate = GenerateAst()
-    generate.main('tool')
+    generate.main(argv)
