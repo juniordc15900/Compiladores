@@ -1,4 +1,5 @@
 from sys import argv
+import os
 
 class GenerateAst():
 
@@ -20,7 +21,7 @@ class GenerateAst():
 
     def defineAst(self,outputDir,baseName,types):
         path = f'{outputDir}/{baseName}.py'
-        arq = open(f'{baseName}.py','w')
+        arq = open(f'{baseName}','w')
         arq.write(f'class {baseName}():')
         arq.write('\n')
         
@@ -54,4 +55,4 @@ class GenerateAst():
 
 if __name__ == '__main__':
     generate = GenerateAst()
-    generate.main(argv[0:])
+    generate.main('tool')
