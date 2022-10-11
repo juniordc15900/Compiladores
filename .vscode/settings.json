@@ -1,4 +1,7 @@
 {
     "python.formatting.provider": "black",
-    "workbench.preferredDarkColorTheme": "Default Dark+"
+    "workbench.preferredDarkColorTheme": "Default Dark+",
+    "python.analysis.extraPaths": [
+        "./src/lox"
+    ]
 }
