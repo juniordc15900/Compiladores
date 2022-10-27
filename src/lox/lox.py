@@ -1,11 +1,12 @@
 from scanner import Scanner
+from tokenn import Tokenn
+from TokenType import TokenType
 
-def error(line, message):
-    report(line, "",message)
 
 def report(line, where, message):
     print(f"[line {line}]\n Error {where} : {message} ")
-
+    Lox.had_error = True
+    
 class Lox:
 
     def __init__(self,hadError):
@@ -35,7 +36,16 @@ class Lox:
             else: 
                 Lox.run(line)
                 Lox.hadError = False
-    @staticmethod
-    def error(line,message):
-        print(message)
                 
+    @staticmethod
+    def error(token : Tokenn,message):
+        
+        if token.type == TokenType.EOF:
+            Lox.report(token.line, ' at end', message)
+        else:
+            Lox.report(token.line, f" at '{token.lexeme}'", message)
+                
+    @staticmethod
+    def report(line, where, message):
+        print(f"[line {line}]\n Error {where} : {message} ")
+        Lox.had_error = True

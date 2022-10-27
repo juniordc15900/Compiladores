@@ -15,19 +15,18 @@ class GenerateAst():
         if (len(args)!=1):
             print('Usage....')
             exit()
-        self.outputDir = args[0]
+        self.outputDir = 'src/lox'
         self.defineAst(self.outputDir,"Expr",{"Binary" :"left: Expr ,operator: Tokenn ,right: Expr",
                                           "Grouping":"expression: Expr",
                                            "Unary":"operator: Tokenn,right: Expr",
                                            "Literal":"value: Any"})
-
 
    
 
     def defineAst(self,path:Path,baseName,types):
         name = baseName.title()
         visitor = f'{baseName}Visitor'
-        with open(f'{baseName}.py',mode='w', encoding='utf-8') as arq:
+        with open(f'{path}/{baseName}.py',mode='w', encoding='utf-8') as arq:
             
             
             arq.write(f'from abc import ABC,abstractmethod')
@@ -70,7 +69,7 @@ class GenerateAst():
             arq.write(f'{IDENTATION}@abstractmethod')
             arq.write('\n')
             arq.write(f'{IDENTATION}')
-            arq.write(f'def visit{type.title()}{name.title()}(self,expr: {baseName}):')
+            arq.write(f"def visit{type.title()}{name.title()}(self,expr: '{baseName}'):")
             arq.write('\n')
             arq.write(f'{IDENTATION*2}pass')
             arq.write('\n')
