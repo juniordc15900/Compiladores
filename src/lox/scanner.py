@@ -65,15 +65,26 @@ class Scanner():
         else:
             return self.source[self.current+1]
     
-    def string(self):
-        while(self.peek() != '"' and not self.isAtEnd()):
-            if (self.peek() == '\n'):
-                self.line +=1
-            else:
-                self.advance()
-        if self.isAtEnd():
-            self.error(self.line, "Unterminated String")
-            return
+    # def string(self):
+    #     while(self.peek() != '"' and not self.isAtEnd()):
+    #         if (self.peek() == '\n'):
+    #             self.line +=1
+    #         else:
+    #             self.advance()
+    #     if self.isAtEnd():
+    #         self.error(self.line, "Unterminated String")
+    #         return
+        
+        
+    def string(self, starter: str) -> None:
+        while self.peek() != starter and not self.is_at_end():
+            if self.peek() == '\n':
+                self.line+=1
+            self.advance()
+
+        self.advance()
+        text: str = self.source[(self.start + 1):(self.current - 1)]
+        self.add_token(TokenType.STRING, text)
 
     def isDigit(self,c):
         return c >= '0' and c <= '9'
@@ -90,11 +101,10 @@ class Scanner():
         text = self.source[self.start:self.current]
         try:
             tipo = self.keywords[text.upper()]
-            if tipo == None:
-                tipo = TokenType.IDENTIFIER
-            self.addToken(tipo)
         except:
-            self.error(self.line,"Unespected string")
+            tipo = TokenType.IDENTIFIER
+        self.addToken(tipo)
+        
 
     def number(self):
         while self.isDigit(self.peek()):
