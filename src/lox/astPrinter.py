@@ -22,6 +22,10 @@ class AstPrinter(ExprVisitor):
 
     def visitUnaryExpr(self, expr: Unary) -> str:
         return self.parenthesize(expr.operator.lexeme, expr.right)
+    
+    def visitTernaryExpr(self, expr: 'Expr') -> str:
+        return self.parenthesize('?', expr.condition, expr.thenCond, expr.elseCond)
+
 
 if __name__ == '__main__':
     exp = Binary(

@@ -52,7 +52,7 @@ class Parser:
                 TokenType.GREATER,
                 TokenType.GREATER_EQUAL,
                 TokenType.LESS,
-                TokenType.LESS_EQUAL
+                TokenType.LESS_EQUAL,
         ):
             operator = self.previous()
             right = self.term()
@@ -110,6 +110,18 @@ class Parser:
             self.consume(TokenType.RIGHT_PAREN, "Expect ')' after expression.")
             return Expr.Grouping(expr)
         raise self.error(self.peek(), 'Expect expression.')
+    
+    def ternary(self):
+        expr = self.comparison()
+
+        if self.match(TokenType.QUESTION):
+            condition = self.previous()
+            thenCond = self.comparison()
+            self.consume(TokenType.COLON, "Expect ':' after expression.")
+            elseCond = self.comparison()
+            expr = Expr.Ternary(condition, thenCond, elseCond)
+
+        return expr
         
     
     def consume(self, type : TokenType, message):

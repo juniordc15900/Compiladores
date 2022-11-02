@@ -47,6 +47,8 @@ class TokenType(Enum):
     TRUE = auto()
     VAR = auto()
     WHILE = auto()
+    QUESTION = auto()
+    COLON = auto()
 
     #comment
     COMMENT = auto()

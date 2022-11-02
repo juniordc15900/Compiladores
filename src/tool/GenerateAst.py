@@ -19,6 +19,7 @@ class GenerateAst():
         self.defineAst(self.outputDir,"Expr",{"Binary" :"left: Expr ,operator: Tokenn ,right: Expr",
                                           "Grouping":"expression: Expr",
                                            "Unary":"operator: Tokenn,right: Expr",
+                                           "Ternary":"condition: Expr,thenCond: Expr,elseCond: Expr",
                                            "Literal":"value: Any"})
 
    

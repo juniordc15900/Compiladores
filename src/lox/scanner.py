@@ -64,27 +64,29 @@ class Scanner():
             return '/0' #final de string
         else:
             return self.source[self.current+1]
-    
-    # def string(self):
-    #     while(self.peek() != '"' and not self.isAtEnd()):
-    #         if (self.peek() == '\n'):
-    #             self.line +=1
-    #         else:
-    #             self.advance()
-    #     if self.isAtEnd():
-    #         self.error(self.line, "Unterminated String")
-    #         return
+    def string(self):
+        while(self.peek() != '"' and not self.isAtEnd()):
+            if (self.peek() == '\n'):
+                self.line +=1
+            else:
+                self.advance()
+        if self.match('"'):
+            tipo = TokenType.STRING
+            self.addToken(tipo)     
+        if self.isAtEnd():
+            self.error(self.line, "Unterminated String")
+            return
         
         
-    def string(self, starter: str) -> None:
-        while self.peek() != starter and not self.is_at_end():
-            if self.peek() == '\n':
-                self.line+=1
-            self.advance()
+    # def string(self) -> None:
+    #     while self.peek() != self.start and not self.isAtEnd():
+    #         if self.peek() == '\n':
+    #             self.line+=1
+    #         self.advance()
 
-        self.advance()
-        text: str = self.source[(self.start + 1):(self.current - 1)]
-        self.add_token(TokenType.STRING, text)
+    #     self.advance()
+    #     text: str = self.source[(self.start + 1):(self.current - 1)]
+    #     self.add_token(TokenType.STRING, text)
 
     def isDigit(self,c):
         return c >= '0' and c <= '9'
@@ -119,6 +121,8 @@ class Scanner():
     def isComment(self):
         while (self.peek() != '*' and not self.isAtEnd()):
             self.advance()
+            # if self.peek() == '\n':
+            #     self.line += 1
         self.advance()
         if self.match('/'):
             return True
@@ -154,6 +158,10 @@ class Scanner():
             self.addToken(TokenType.LESS_EQUAL if self.match("=") else TokenType.EQUAL)
         elif c == ">":
             self.addToken(TokenType.GREATER_EQUAL if self.match("=") else TokenType.EQUAL)
+        elif c == "?":
+            self.addToken(TokenType.QUESTION)
+        elif c == ":": 
+            self.addToken(TokenType.COLON)
         elif c == "/":
             if self.match('/'):
                 while (self.peek() != '/n' and not self.isAtEnd()):

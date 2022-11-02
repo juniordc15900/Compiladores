@@ -19,6 +19,10 @@ class ExprVisitor(ABC):
         pass
 
     @abstractmethod
+    def visitTernaryExpr(self,expr: 'Expr'):
+        pass
+
+    @abstractmethod
     def visitLiteralExpr(self,expr: 'Expr'):
         pass
 
@@ -57,6 +61,17 @@ class Unary(Expr):
 
     def accept(self, visitor: ExprVisitor) -> None:
         return visitor.visitUnaryExpr(self)
+
+
+
+class Ternary(Expr):
+    def __init__(self,condition: Expr,thenCond: Expr,elseCond: Expr) -> None:
+        self.condition = condition
+        self.thenCond = thenCond
+        self.elseCond = elseCond
+
+    def accept(self, visitor: ExprVisitor) -> None:
+        return visitor.visitTernaryExpr(self)
 
 
 
