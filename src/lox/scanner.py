@@ -76,17 +76,7 @@ class Scanner():
         if self.isAtEnd():
             self.error(self.line, "Unterminated String")
             return
-        
-        
-    # def string(self) -> None:
-    #     while self.peek() != self.start and not self.isAtEnd():
-    #         if self.peek() == '\n':
-    #             self.line+=1
-    #         self.advance()
 
-    #     self.advance()
-    #     text: str = self.source[(self.start + 1):(self.current - 1)]
-    #     self.add_token(TokenType.STRING, text)
 
     def isDigit(self,c):
         return c >= '0' and c <= '9'
@@ -150,6 +140,10 @@ class Scanner():
             self.addToken(TokenType.SEMICOLON)
         elif c == "*":  
             self.addToken(TokenType.STAR)
+        elif c == ">":
+            self.addToken(TokenType.GREATER)
+        elif c == "<":
+            self.addToken(TokenType.LESS)
         elif c == "!":
             self.addToken(TokenType.BANG_EQUAL if self.match("=") else TokenType.BANG)
         elif c == "=":
